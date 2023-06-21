@@ -1,0 +1,23 @@
+from transformers import pipeline
+
+def paraphrase_text(text):
+    # Load the T5 model for paraphrasing
+    paraphrase_generator = pipeline("text2text-generation", model="t5-base", task="text2text")
+
+    # Generate paraphrases
+    paraphrases = paraphrase_generator(text, max_length=50, num_return_sequences=5)
+
+    # Extract the paraphrased text from the generated outputs
+    paraphrased_text = [paraphrase["generated_text"] for paraphrase in paraphrases]
+
+    return paraphrased_text
+
+# Example text to paraphrase
+original_text = "The weather is pleasant today."
+
+# Paraphrase the text
+paraphrased_texts = paraphrase_text(original_text)
+
+# Print the paraphrased texts
+for i, paraphrase in enumerate(paraphrased_texts):
+    print(f"Paraphrase {i+1}: {paraphrase}")
