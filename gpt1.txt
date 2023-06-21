@@ -1,0 +1,34 @@
+from nltk.corpus import wordnet
+from nltk.tokenize import word_tokenize
+
+def paraphrase_text(text):
+    # Tokenize the text into individual words
+    tokens = word_tokenize(text)
+    
+    # Paraphrased sentence
+    paraphrased_sentence = []
+    
+    for token in tokens:
+        # Get the synonyms for each word
+        synonyms = wordnet.synsets(token)
+        paraphrase = token
+        
+        if len(synonyms) > 0:
+            # Select a random synonym as a paraphrase
+            paraphrase = synonyms[0].lemmas()[0].name()
+        
+        paraphrased_sentence.append(paraphrase)
+    
+    # Join the paraphrased words into a sentence
+    paraphrased_text = " ".join(paraphrased_sentence)
+    
+    return paraphrased_text
+
+# Example text to paraphrase
+original_text = "The weather is pleasant today."
+
+# Paraphrase the text
+paraphrased_text = paraphrase_text(original_text)
+
+# Print the paraphrased text
+print(paraphrased_text)
