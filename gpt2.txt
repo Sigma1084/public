@@ -1,16 +1,24 @@
-from transformers import pipeline
+from transformers import T5Tokenizer, T5ForConditionalGeneration
 
 def paraphrase_text(text):
-    # Load the T5 model for paraphrasing
-    paraphrase_generator = pipeline("text2text-generation", model="t5-base", task="text2text")
+    # Load the T5 model and tokenizer
+    model_name = "t5-base"
+    tokenizer = T5Tokenizer.from_pretrained(model_name)
+    model = T5ForConditionalGeneration.from_pretrained(model_name)
+
+    # Tokenize the text
+    inputs = tokenizer.encode(text, return_tensors="pt")
 
     # Generate paraphrases
-    paraphrases = paraphrase_generator(text, max_length=50, num_return_sequences=5)
+    outputs = model.generate(inputs, max_length=50, num_return_sequences=5, num_beams=5)
 
-    # Extract the paraphrased text from the generated outputs
-    paraphrased_text = [paraphrase["generated_text"] for paraphrase in paraphrases]
+    # Decode and return the paraphrased texts
+    paraphrased_texts = []
+    for output in outputs:
+        paraphrase = tokenizer.decode(output, skip_special_tokens=True)
+        paraphrased_texts.append(paraphrase)
 
-    return paraphrased_text
+    return paraphrased_texts
 
 # Example text to paraphrase
 original_text = "The weather is pleasant today."
